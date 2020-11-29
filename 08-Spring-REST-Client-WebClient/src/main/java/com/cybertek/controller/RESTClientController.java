@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,8 @@ public class RESTClientController {
 
 	private WebClient.Builder webClientBuilder;
 
-	private final String BASE_API = "http://localhost:8080/products";
-	private final String BASE_API_BY_ID = "http://localhost:8080/products/{id}";
+	private final String BASE_API = "http://localhost:8080/api/products";
+	private final String BASE_API_BY_ID = "http://localhost:8080/api/products/{id}";
 
 	@Autowired
 	public RESTClientController(WebClient.Builder webClientBuilder ) {
@@ -92,9 +93,13 @@ public class RESTClientController {
 		
 		return  webClientBuilder.build()
 					.get()
-					.uri(BASE_API_BY_ID,id)
+					.uri(BASE_API_BY_ID+"/rr",id)
 					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 					.retrieve()
+					.onStatus(HttpStatus::is4xxClientError,
+							error -> Mono.error(new RuntimeException("API not found")))
+						.onStatus(HttpStatus::is5xxServerError,
+							error -> Mono.error(new RuntimeException("Server is not responding")))
 					.bodyToMono(Product.class)
 					.block();
 		

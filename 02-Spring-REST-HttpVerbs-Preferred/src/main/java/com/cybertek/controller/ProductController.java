@@ -1,6 +1,6 @@
 package com.cybertek.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,25 +27,22 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/{id}")
-	public Set<Product> delete(@PathVariable("id") Long id) {
-		Set<Product> set = productService.delete(id);
-		return set;
+	public List<Product> delete(@PathVariable("id") Long id) {
+		return productService.delete(id);
 	}
 
 	@PutMapping("/{id}")
-	public Set<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-		Set<Product> set = productService.updateProduct(id, product);
-		return set;
+	public List<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+		return productService.updateProduct(id, product);
 	}
 
 	@PostMapping
-	public Set<Product> createProduct(@RequestBody Product product) {
-		Set<Product> set = productService.createProduct(product);
-		return set;
+	public List<Product> createProduct(@RequestBody Product product) {
+		return productService.createProduct(product);
 	}
 
 	@GetMapping
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 		return productService.getProducts();
 	}
 

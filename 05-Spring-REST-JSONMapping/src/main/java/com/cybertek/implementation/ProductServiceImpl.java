@@ -1,70 +1,66 @@
 package com.cybertek.implementation;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cybertek.model.Category;
 import com.cybertek.model.Product;
+import com.cybertek.repository.CategoryRepository;
+import com.cybertek.repository.ProductRepository;
 import com.cybertek.service.ProductService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-	private static Map<Long, Product> productRepo = new HashMap<>();
-	static {
-		Product tv = new Product();
-		tv.setId(1);
-		tv.setName("LG 40' Smart TV");
-		productRepo.put(tv.getId(), tv);
+	private ProductRepository productRepository;
+	private CategoryRepository categoryRepository;
 
-		Product macbook = new Product();
-		macbook.setId(2);
-		macbook.setName("MacBook Pro");
-		productRepo.put(macbook.getId(), macbook);
-
-		Product microphone = new Product();
-		microphone.setId(3);
-		microphone.setName("BTW Microphone");
-		productRepo.put(microphone.getId(), microphone);
-
-		Product notebook = new Product();
-		notebook.setId(4);
-		notebook.setName("Dell 15' i7 Notebook");
-		productRepo.put(notebook.getId(), notebook);
-
-		Product chromebook = new Product();
-		chromebook.setId(5);
-		chromebook.setName("Google Chrome Book - Education 13' ");
-		productRepo.put(chromebook.getId(), chromebook);
+	public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
 	}
 
-	public Set<Product> delete(Long id) {
-		productRepo.remove(id);
-		return new HashSet(productRepo.values());
+
+	public List<Product> delete(Long id) {
+		
+		productRepository.deleteById(id);
+		return productRepository.findAll();
 	}
 
-	public Set<Product> updateProduct(long id, Product product) {
-		productRepo.remove(id);
-		product.setId(id);
-		productRepo.put(id, product);
-		return new HashSet(productRepo.values());
+	public List<Product> updateProduct(long id, Product product) {
+		
+		Category category =categoryRepository.findByName(product.getCategory().getName());
+
+		
+		Product obj = productRepository.findById(id).get();
+		obj.setDescription(product.getDescription());
+		obj.setName(product.getName());
+		obj.setPrice(product.getPrice());
+		obj.setCategory(category);
+		
+		productRepository.save(obj);
+		
+		return productRepository.findAll();
 	}
 
-	public Set<Product> createProduct(Product product) {
-		productRepo.put(product.getId(), product);
-		return new HashSet(productRepo.values());
+	public List<Product> createProduct(Product product) {
+		
+		Category category =categoryRepository.findByName(product.getCategory().getName());
+		product.setCategory(category);
+		
+		productRepository.save(product);
+		
+		return productRepository.findAll();
 	}
 
-	public Set<Product> getProducts() {
-		return new HashSet(productRepo.values());
+	public List<Product> getProducts() {
+		return productRepository.findAll();
 
 	}
 
 	public Product getProduct(long id) {
-		return productRepo.get(id);
+		return productRepository.findById(id).get();
 	}
 
 }

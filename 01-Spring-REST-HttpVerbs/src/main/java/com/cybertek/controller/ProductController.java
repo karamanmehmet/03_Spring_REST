@@ -1,6 +1,6 @@
 package com.cybertek.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,25 +24,22 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody Set<Product> delete(@PathVariable("id") Long id) {
-		Set<Product> set = productService.delete(id);
-		return set;
+	public @ResponseBody List<Product> delete(@PathVariable("id") Long id) {
+		return productService.delete(id);
 	}
 
 	@RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
-	public @ResponseBody Set<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-		Set<Product> set = productService.updateProduct(id, product);
-		return set;
+	public @ResponseBody List<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+		return productService.updateProduct(id, product);
 	}
 
 	@RequestMapping(value = "/products", method = RequestMethod.POST)
-	public Set<Product> createProduct(@RequestBody Product product) {
-		Set<Product> set = productService.createProduct(product);
-		return set;
+	public @ResponseBody List<Product> createProduct(@RequestBody Product product) {
+		return productService.createProduct(product);
 	}
 
 	@RequestMapping(value = "/products")
-	public @ResponseBody Set<Product> getProducts() {
+	public @ResponseBody List<Product> getProducts() {
 		return productService.getProducts();
 	}
 

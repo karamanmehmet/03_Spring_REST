@@ -1,6 +1,5 @@
 package com.cybertek.controller;
 
-import java.net.URI;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class RESTClientController {
 
 	private RestTemplate restTemplate;
 
-	private final String BASE_API = "http://localhost:8080/products";
+	private final String BASE_API = "http://localhost:8080/api/products";
 
 	@Autowired
 	public RESTClientController(RestTemplate restTemplate) {

@@ -1,7 +1,6 @@
 package com.cybertek.controller;
 
-import java.awt.font.MultipleMaster;
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,36 +32,34 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Set<Product>> delete(@PathVariable("id") Long id) {
+	public ResponseEntity<List<Product>> delete(@PathVariable("id") Long id) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Version", "CyberTek.v1");
 		responseHeaders.set("Operation", "Delete");
-
-		Set<Product> set = productService.delete(id);
-		return new ResponseEntity<>(set, responseHeaders, HttpStatus.OK);
+		List<Product> list = productService.delete(id);
+		return new ResponseEntity<>(list, responseHeaders, HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Set<Product>> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+	public ResponseEntity<List<Product>> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("Version", "CyberTek.v1");
 		map.add("Operation", "Update");
-
-		Set<Product> set = productService.updateProduct(id, product);
-		return new ResponseEntity<>(set, map, HttpStatus.OK);
+		List<Product> list = productService.updateProduct(id, product);
+		return new ResponseEntity<>(list, map, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<Set<Product>> createProduct(@RequestBody Product product) {
+	public ResponseEntity<List<Product>> createProduct(@RequestBody Product product) {
 
-		Set<Product> set = productService.createProduct(product);
+		List<Product> set = productService.createProduct(product);
 		return ResponseEntity.status(HttpStatus.CREATED).header("Version", "CyberTek.v1").header("Operation", "Create")
 				.body(set);
 	}
 
 	@GetMapping
-	public ResponseEntity<Set<Product>> getProducts() {
+	public ResponseEntity<List<Product>> getProducts() {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Version", "CyberTek.v1");
 		responseHeaders.set("Operation", "Get List");

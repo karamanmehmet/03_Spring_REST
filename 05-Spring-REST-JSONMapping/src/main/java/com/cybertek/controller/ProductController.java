@@ -1,6 +1,6 @@
 package com.cybertek.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,47 +32,41 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/products/{id}")
-	public ResponseEntity<Set<Product>> delete(@PathVariable("id") Long id) {
+	public ResponseEntity<List<Product>> delete(@PathVariable("id") Long id) {
 
-		if(id > 10)
-		{
+		if (id > 10) {
 			throw new MyCustomException("the id is not in range");
 		}
-		
-		
+
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Version", "CyberTek.v1");
 		responseHeaders.set("Operation", "Delete");
 
-		
-		
-		
-		Set<Product> set = productService.delete(id);
-		
-		
-		return new ResponseEntity<>(set, responseHeaders, HttpStatus.OK);
+		List<Product> list = productService.delete(id);
+
+		return new ResponseEntity<>(list, responseHeaders, HttpStatus.OK);
 	}
 
 	@PutMapping("/products/{id}")
-	public ResponseEntity<Set<Product>> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+	public ResponseEntity<List<Product>> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("Version", "CyberTek.v1");
 		map.add("Operation", "Update");
 
-		Set<Product> set = productService.updateProduct(id, product);
-		return new ResponseEntity<>(set, map, HttpStatus.OK);
+		List<Product> list = productService.updateProduct(id, product);
+		return new ResponseEntity<>(list, map, HttpStatus.OK);
 	}
 
 	@PostMapping("/products")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Set<Product> createProduct(@RequestBody Product product) {
+	public List<Product> createProduct(@RequestBody Product product) {
 
-		Set<Product> set = productService.createProduct(product);
-		return set;
+		return productService.createProduct(product);
+
 	}
 
 	@GetMapping("/products")
-	public ResponseEntity<Set<Product>> getProducts() {
+	public ResponseEntity<List<Product>> getProducts() {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Version", "CyberTek.v1");
 		responseHeaders.set("Operation", "Get List");
