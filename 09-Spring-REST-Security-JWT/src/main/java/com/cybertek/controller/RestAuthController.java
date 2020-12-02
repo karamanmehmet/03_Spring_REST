@@ -124,4 +124,5 @@ public class RestAuthController {
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
+
 }

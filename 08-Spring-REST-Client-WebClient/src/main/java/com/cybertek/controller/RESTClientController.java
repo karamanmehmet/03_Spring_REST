@@ -1,5 +1,6 @@
 package com.cybertek.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.cybertek.exception.MyCustomException;
 import com.cybertek.model.Product;
 
 import reactor.core.publisher.Mono;
@@ -35,19 +37,19 @@ public class RESTClientController {
 	}
 
 	@DeleteMapping("/{id}")
-	public Set<Product> delete(@PathVariable("id") Long id) {
+	public List<Product> delete(@PathVariable("id") Long id) {
 		return  webClientBuilder.build()
 				.delete()
 				.uri(BASE_API_BY_ID,id)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.retrieve()
-				.bodyToMono(Set.class)
+				.bodyToMono(List.class)
 				.block();
 
 	}
 
 	@PutMapping("/{id}")
-	public Set<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+	public List<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
 
 			return  webClientBuilder.build()
 				.put()
@@ -55,12 +57,12 @@ public class RESTClientController {
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.body(Mono.just(product), Product.class)	
 				.retrieve()
-				.bodyToMono(Set.class)
+				.bodyToMono(List.class)
 				.block();
 	}
 
 	@PostMapping
-	public Set<Product> createProduct(@RequestBody Product product) {
+	public List<Product> createProduct(@RequestBody Product product) {
 
 		return  webClientBuilder.build()
 				.post()		
@@ -68,20 +70,20 @@ public class RESTClientController {
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.body(Mono.just(product), Product.class)			
 				.retrieve()
-				.bodyToMono(Set.class)
+				.bodyToMono(List.class)
 				.block();
 
 	}
 
 	@GetMapping
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 
 		return  webClientBuilder.build()
 				.get()
 				.uri(BASE_API)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.retrieve()
-				.bodyToMono(Set.class)
+				.bodyToMono(List.class)
 				.block();
 
 	}
@@ -97,9 +99,9 @@ public class RESTClientController {
 					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 					.retrieve()
 					.onStatus(HttpStatus::is4xxClientError,
-							error -> Mono.error(new RuntimeException("API not found")))
+							error -> Mono.error(new MyCustomException("API not found")))
 						.onStatus(HttpStatus::is5xxServerError,
-							error -> Mono.error(new RuntimeException("Server is not responding")))
+							error -> Mono.error(new MyCustomException("Object Mapping is not Proper")))
 					.bodyToMono(Product.class)
 					.block();
 		
