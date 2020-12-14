@@ -82,7 +82,7 @@ public class RESTClientController {
 				.onStatus(HttpStatus::is4xxClientError, error -> Mono.error(new MyCustomException("API not found")))
 				.bodyToMono(Product.class).onErrorResume((e) -> {
 					// System.out.println(e.toString());
-					return Mono.just(new Product("Apple", 1.5f));
+					return Mono.just(new Product("Orange", 1.5f));
 				}
 				).block();
 

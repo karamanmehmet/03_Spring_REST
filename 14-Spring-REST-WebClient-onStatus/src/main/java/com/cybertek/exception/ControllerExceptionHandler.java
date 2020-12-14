@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 public class ControllerExceptionHandler {
 
 	  @ExceptionHandler(value = {MyCustomException.class})
-	  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+	  @ResponseStatus(value = HttpStatus.BANDWIDTH_LIMIT_EXCEEDED)
 	  public ApiErrorResponse resourceNotFoundException(MyCustomException ex, WebRequest request) {
 		  ApiErrorResponse message = new ApiErrorResponse(
 	        400,

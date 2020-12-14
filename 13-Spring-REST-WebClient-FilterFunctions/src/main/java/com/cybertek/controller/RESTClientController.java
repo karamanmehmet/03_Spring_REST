@@ -76,10 +76,10 @@ public class RESTClientController {
 
 
 	@GetMapping
-	public List<?> getUsers() {
+	public List<?> getProducts() {
 
 
-		return webclient.get().uri(BASE_API).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+		return webclient.get().uri(BASE_API).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).header("CyberTekVersion", "Version 01")
 				.retrieve().bodyToMono(List.class).block();
 
 	}
