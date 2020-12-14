@@ -24,6 +24,8 @@ import com.cybertek.service.ProductService;
 @RequestMapping("/products")
 public class ProductController {
 
+	private static int counter_timer = 0;
+
 	private ProductService productService;
 
 	@Autowired
@@ -68,10 +70,54 @@ public class ProductController {
 
 	}
 
+	@GetMapping("products_timeout")
+	public ResponseEntity<List<Product>> getProducts_products_timeout() throws InterruptedException {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Version", "CyberTek.v1");
+		responseHeaders.set("Operation", "Get List");
+		Thread.sleep(500);
+
+		return ResponseEntity.ok().headers(responseHeaders).body(productService.getProducts());
+
+	}
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
 
 		return ResponseEntity.ok(productService.getProduct(id));
+
+	}
+
+	@GetMapping("4xx")
+	public ResponseEntity<List<Product>> getProducts_4xx() throws InterruptedException {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Version", "CyberTek.v1");
+		responseHeaders.set("Operation", "Get List");
+		Thread.sleep(200);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(responseHeaders)
+				.body(productService.getProducts());
+
+	}
+
+	@GetMapping("5xx")
+	public ResponseEntity<List<Product>> getProducts_5xx() throws InterruptedException {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Version", "CyberTek.v1");
+		responseHeaders.set("Operation", "Get List");
+		Thread.sleep(200);
+		return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).headers(responseHeaders)
+				.body(productService.getProducts());
+
+	}
+
+	@GetMapping("products_retry")
+	public ResponseEntity<List<Product>> getProductsproducts_retry() throws InterruptedException {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Version", "CyberTek.v1");
+		responseHeaders.set("Operation", "Get List");
+		System.out.println("Waiting");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(productService.getProducts());
 
 	}
 
